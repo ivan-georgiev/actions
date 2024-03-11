@@ -1,0 +1,15 @@
+name: checkout
+on: 
+  push:
+  workflow_dispatch:
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: job1-step1
+        working-directory: .
+        run: |
+          pwd
+          ls
+          
