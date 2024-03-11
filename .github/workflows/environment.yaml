@@ -1,0 +1,14 @@
+name: environment
+on: 
+  push:
+  workflow_dispatch:
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: job1-step1
+        shell: pwsh
+        env:
+          ENVVAL1: test1
+        run: |
+          Write-Verbose -Message "Value: [${env:ENVVAL1}]" -Verbose
