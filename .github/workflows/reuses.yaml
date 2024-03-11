@@ -1,0 +1,9 @@
+name: reuses
+on: 
+  push:
+  workflow_dispatch:
+jobs:
+  call-workflow-in-local-repo:
+    uses: ./.github/workflows/reusable_input.yaml
+    with:
+      tags: Tags test value1

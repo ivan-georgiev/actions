@@ -1,0 +1,22 @@
+name: reusalbe_input
+on:
+  workflow_call:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: false
+        default: 'warning'
+        type: string
+      tags:
+        description: 'Test tags'
+        required: true
+        type: string
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print the input tag to STDOUT
+        shell: pwsh
+        run: |
+          Write-Verbose -Message '${{ inputs.tags }} - ${{ inputs.logLevel }}' -Verbose
