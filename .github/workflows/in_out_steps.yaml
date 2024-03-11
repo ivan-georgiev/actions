@@ -1,0 +1,25 @@
+name: in_out_steps
+on: 
+  push:
+  workflow_dispatch:
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: job1-step1
+        id: job1-step1
+        working-directory: .
+        shell: pwsh
+        run: |
+          Get-Item -Path $env:GITHUB_OUTPUT
+          "step1_output_a=yellow" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "STEP1_ENV1=red" | Out-File -FilePath $env:GITHUB_ENV -Append
+          pwd
+      - name: Consume step output
+        shell: pwsh
+        env:
+          OUTPUT_A: ${{ steps.job1-step1.outputs.step1_output_a }}
+        run: |
+          Write-Verbose -Message "Inline: ${{ steps.job1-step1.outputs.step1_output_a }}" -Verbose
+          Write-Verbose -Message "As ENV: ${env:OUTPUT_A}" -Verbose
+          Write-Verbose -Message "ENV: ${env:STEP1_ENV1}" -Verbose
