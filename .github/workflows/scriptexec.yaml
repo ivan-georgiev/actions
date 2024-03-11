@@ -11,4 +11,3 @@ jobs:
         shell: pwsh
         run: |
           & .\scripts\Test-Script.ps1 -Name "Bob" -ErrorAction Stop -Verbose
-          

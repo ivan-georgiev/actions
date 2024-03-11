@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 env:
-  IN_ACTOR_NAME: Bob
+  IN_ACTOR_NAME: BobTheVar
 
 jobs:
   job1:

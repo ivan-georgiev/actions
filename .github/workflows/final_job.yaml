@@ -1,0 +1,27 @@
+name: final_job
+on: 
+  workflow_dispatch:
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: job1-step1
+        shell: pwsh
+        run: Write-Verbose -Message "OK" -Verbose
+  job2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: job2-step1
+        shell: pwsh
+        run: |
+          throw "Fail"
+  final-job:
+    runs-on: ubuntu-latest
+    needs: [job1, job2]
+    if: ${{ always() }}
+    steps:
+      - name: Consume step output
+        shell: pwsh
+        run: |
+          Write-Verbose -Message "Final Job" -Verbose
