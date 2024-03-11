@@ -1,6 +1,5 @@
 name: in_out_jobs
 on: 
-  push:
   workflow_dispatch:
 
 jobs:

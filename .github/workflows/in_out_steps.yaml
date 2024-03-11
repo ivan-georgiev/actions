@@ -1,6 +1,5 @@
 name: in_out_steps
 on: 
-  push:
   workflow_dispatch:
 jobs:
   job1:

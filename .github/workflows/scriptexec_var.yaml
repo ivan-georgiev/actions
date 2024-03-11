@@ -1,6 +1,10 @@
-name: checkout
+name: scriptexec_var
 on: 
   workflow_dispatch:
+
+env:
+  IN_ACTOR_NAME: Bob
+
 jobs:
   job1:
     runs-on: ubuntu-latest
@@ -8,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: job1-step1
         working-directory: .
+        shell: pwsh
         run: |
-          pwd
-          ls
+          & .\scripts\Test-Script.ps1 -Name "$env:IN_ACTOR_NAME" -ErrorAction Stop -Verbose
           

@@ -1,6 +1,5 @@
 name: reuses
 on: 
-  push:
   workflow_dispatch:
 jobs:
   call-workflow-in-local-repo:
