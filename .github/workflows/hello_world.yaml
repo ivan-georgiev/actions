@@ -7,4 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: job1-step1
-        run: echo "Hello World!"
+        run: |
+          echo "Hello World!"
+          # https://docs.github.com/en/actions/learn-github-actions/contexts#about-contexts
+          # https://docs.github.com/en/enterprise-cloud@latest/actions/learn-github-actions/expressions#functions
+          echo "${{ toJSON(github) }}"
+          echo "${{ toJSON(runner) }}"
