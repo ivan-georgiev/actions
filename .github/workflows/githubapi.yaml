@@ -1,0 +1,59 @@
+name: githubapi
+on: 
+  workflow_dispatch:
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push to branch via git cli
+        shell: bash
+        run: |
+          targetBranch=verified
+          
+          commit=$(git branch -r origin/$targetBranch --contains HEAD) || exit 1
+          if [ -z "$commit" ]; then
+            git push origin HEAD:$targetBranch --force
+          else
+            echo "INFO: HEAD alredy in target" && exit 0
+          fi
+  job2:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:          
+      - name: Check if tag exists
+        id: check-tag
+        uses: actions/github-script@v7
+        env:
+          GITHUB_SHA: ${{ env.GITHUB_SHA }}        
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { GITHUB_SHA } = process.env;
+            const tagName = `v-${GITHUB_SHA}`;
+            const tagExists = await github.rest.git.getRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `tags/${tagName}`,
+            }).then(() => true).catch(() => false);
+            console.log(`Tag ${tagName} exists: ${tagExists}`);
+            return tagExists;
+
+      - name: Create tag
+        if: steps.check-tag.outputs.result == 'false'
+        uses: actions/github-script@v7
+        env:
+          GITHUB_SHA: ${{ env.GITHUB_SHA }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { GITHUB_SHA } = process.env;
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/v-${GITHUB_SHA}`,
+              sha: context.sha
+            });
