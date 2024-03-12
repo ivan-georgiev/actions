@@ -1,0 +1,28 @@
+name: concurrency
+on: 
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-job
+    steps:
+      - name: job1-step1
+        run: |
+          echo "Started A"
+          sleep 60
+          echo "Completed A"
+  job2:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-job
+    steps:
+      - name: job2-step1
+        run: |
+          echo "Started B"
+          sleep 60
+          echo "Completed B"
