@@ -1,0 +1,24 @@
+name: container
+on:
+  workflow_dispatch:
+jobs:
+  container-test-job:
+    runs-on: ubuntu-latest
+    container:
+      image: node:18
+      env:
+        NODE_ENV: development
+      options: --cpus 1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: project
+      - name: Check for dockerenv file
+        run: |
+          if ! [ -f /.dockerenv ] ; then
+            echo "Not running inside docker, exiting to avoid data damage." >&2
+            exit 1
+          fi
+          env | sort
+          echo $NODE_ENV
+          ls $GITHUB_WORKSPACE/project
