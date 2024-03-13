@@ -1,0 +1,21 @@
+name: child
+
+on:
+  workflow_run:
+    workflows: ["hello-world"]
+    types: [completed] # or requested
+
+jobs:
+on-success-job:
+  runs-on: ubuntu-latest
+  if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  steps:
+    - run: |
+        echo "First workflow completed"
+
+on-failure-job:
+  runs-on: ubuntu-latest
+  if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+  steps:
+    - run: |
+        echo "First workflow failed"
