@@ -1,0 +1,17 @@
+name: service
+on:
+  workflow_dispatch:
+
+jobs:
+  runner-job:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+    steps:
+      - run: |
+          set -xe
+          timeout 1 bash -c '< /dev/tcp/localhost/6379'
+          echo $?
