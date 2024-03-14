@@ -12,6 +12,7 @@ jobs:
     steps:
       - run: |
           echo "First workflow completed"
+          echo "${{ toJSON(github.event.workflow_run) }}"
 
   on-failure-job:
     runs-on: ubuntu-latest
