@@ -1,0 +1,33 @@
+name: artifacts
+on: [workflow_dispatch]
+
+jobs:
+  create-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: create files
+        run: |
+          mkdir dist
+          date > ./dist/file1.txt
+          date > ./dist/file2.txt
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          retention-days: 5
+          path: |
+            dist
+            !dist/file2.txt
+  
+  fetch-job:
+    runs-on: ubuntu-latest
+    needs: create-job
+    steps:
+      - name: fetch
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: ./artifacts
+      - name: list files
+        run: |
+          find .       
