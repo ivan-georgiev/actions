@@ -3,6 +3,11 @@ on:
   workflow_dispatch:
 jobs:
   call-workflow-in-local-repo:
-    uses: ./.github/workflows/reusable_input.yaml
+    uses: ./.github/workflows/shared_input.yaml
     with:
       tags: Tags test value1
+  call-workflow-in-local-repo-dual-checkout:
+    uses: ./.github/workflows/shared_dualcheckout.yaml
+    with:
+      repository: ivan-georgiev/cheatsheets
+      ref: master

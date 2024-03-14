@@ -1,4 +1,4 @@
-name: reusalbe_input
+name: shared_input
 on:
   workflow_call:
     inputs:
@@ -20,3 +20,4 @@ jobs:
         shell: pwsh
         run: |
           Write-Verbose -Message '${{ inputs.tags }} - ${{ inputs.logLevel }}' -Verbose
+          Write-Verbose -Message '${{ toJSON(github) }}' -Verbose

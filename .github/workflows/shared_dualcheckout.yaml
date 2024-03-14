@@ -1,0 +1,39 @@
+name: shared_dualcheckout
+on:
+  workflow_call:
+    inputs:
+      repository:
+        description: Name of repository to checkout
+        required: false
+        default: ${{ github.repository }}
+        type: string
+      ref:
+        description: Git ref to checkout
+        required: false
+        default: ${{ github.ref }}
+        type: string
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print details
+        shell: pwsh
+        run: |
+          Write-Verbose -Message '${{ inputs.repository }} - ${{ inputs.logLevel }}' -Verbose
+          Write-Verbose -Message '${{ toJSON(github) }}' -Verbose
+      - name: checkout current repo
+        uses: actions/checkout@v4
+        with:
+          path: repo_one
+      - name: checkout passed repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.ref }}
+          path: repo_two
+          token: ${{ github.token }}
+      - name: list files
+        shell: bash
+        run: |
+          find . -not -path '*/.*'
