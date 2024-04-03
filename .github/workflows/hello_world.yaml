@@ -13,3 +13,4 @@ jobs:
           # https://docs.github.com/en/enterprise-cloud@latest/actions/learn-github-actions/expressions#functions
           echo "${{ toJSON(github) }}"
           echo "${{ toJSON(runner) }}"
+          env | sort
