@@ -1,12 +1,19 @@
 name: reuses
 on: 
   workflow_dispatch:
+    inputs:
+      parentInput:
+        description: 'Parent Input'
+        required: false
+        default: 'ParentValue'
+        type: string
 jobs:
   call-workflow-in-local-repo:
     uses: ./.github/workflows/shared_input.yaml
     with:
       tags: Tags test value1
   call-workflow-in-local-repo-dual-checkout:
+    needs: call-workflow-in-local-repo
     uses: ./.github/workflows/shared_dualcheckout.yaml
     with:
       repository: ivan-georgiev/cheatsheets
