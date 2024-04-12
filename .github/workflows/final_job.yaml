@@ -1,7 +1,12 @@
 name: final_job
 on: 
   workflow_dispatch:
-
+    inputs:
+      skipFinalJob:
+        description: 'Set to true to skip the final job'
+        required: false
+        default: false
+        type: boolean
 jobs:
   job1:
     runs-on: ubuntu-latest
@@ -19,7 +24,7 @@ jobs:
   final-job:
     runs-on: ubuntu-latest
     needs: [job1, job2]
-    if: ${{ always() }}
+    if: ${{ always() && ! inputs.skipFinalJob }}
     steps:
       - name: Consume step output
         shell: pwsh
