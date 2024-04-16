@@ -6,9 +6,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
       - name: job1-step1
         working-directory: .
         run: |
+          git config --list
           pwd
           ls
           
