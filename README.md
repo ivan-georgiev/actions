@@ -1,2 +1,2 @@
 # actions
-Evalution of GitHub Actions
+Evalution of GitHub Actions.
