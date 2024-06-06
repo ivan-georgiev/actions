@@ -1,0 +1,29 @@
+name: shared_deploy
+on:
+  workflow_call:
+    inputs:
+      stack:
+        description: 'Stack name'
+        required: true
+        type: string      
+      environment:
+        description: 'Environment name'
+        required: true
+        type: string
+      site:
+        description: 'primary or secondary'
+        required: true
+        type: string
+      mode:
+        description: 'minimal or complete'
+        required: true
+        type: string
+            
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print the input value
+        shell: pwsh
+        run: |
+          Write-Verbose -Message "Value: ${{ inputs.stack }} ,  ${{ inputs.environment }} ,   ${{ inputs.site }} ,  ${{ inputs.mode }}" -Verbose

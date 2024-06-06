@@ -1,0 +1,54 @@
+name: matrix_manyenvs
+on:
+  workflow_dispatch:
+    inputs:
+      envFilter:
+        description: 'Environment Group Filter'
+        required: true
+        default: non-prod
+        type: string
+      mode:
+        description: 'minimal or complete'
+        required: true
+        default: complete
+        type: string
+jobs:
+  setupMatrix:
+    runs-on: ubuntu-latest
+    outputs:
+      environments: ${{ steps.create-matrix.outputs.environments }}
+      environmentsList: ${{ steps.create-matrix.outputs.environmentsList }}
+    steps:
+      - name: Dynamically create environments list
+        id: create-matrix
+        working-directory: .
+        shell: pwsh
+        run: |
+          # input: envFilter
+          
+          # result
+          $environments = @{
+            'dev' = @{
+              'site'= 'primary'
+            }
+            'test' = @{
+              'site' = 'primary'
+            }
+          }
+          $environmentsJson = $environments | ConvertTo-Json -Compress
+          "environments=$environmentsJson" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+          $environmentsListJson = $environments.GetEnumerator().Name | ConvertTo-Json -Compress
+          "environmentsList=$environmentsListJson" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+  call-deployenv-workflow:
+    uses: ./.github/workflows/shared_deployenv.yaml
+    strategy:
+      fail-fast: false
+      matrix:
+        environment:  ${{ fromJson(needs.setupMatrix.outputs.environmentsList) }}
+    needs: setupMatrix
+    with:
+      environment: ${{ matrix.environment }}
+      site: ${{ fromJson(needs.setupMatrix.outputs.environments)[matrix.environment].site }}
+      mode: ${{ inputs.mode }}

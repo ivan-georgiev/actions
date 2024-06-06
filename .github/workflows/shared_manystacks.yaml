@@ -1,0 +1,32 @@
+name: shared_manystacks
+on:
+  workflow_call:
+    inputs:
+      stackList:
+        description: 'Stack Names JSON list'
+        required: true
+        type: string
+      environment:
+        description: 'Environment name'
+        required: true
+        type: string
+      site:
+        description: 'primary or secondary'
+        required: true
+        type: string
+      mode:
+        description: 'minimal or complete'
+        required: true
+        type: string
+jobs:
+  deploy-single-stack:
+    uses: ./.github/workflows/shared_deploystack.yaml
+    strategy:
+      fail-fast: false
+      matrix:
+        stack: ${{ fromJson(inputs.stackList) }}
+    with:
+      stack: ${{ matrix.stack }}
+      environment: ${{ inputs.environment }}
+      site: ${{ inputs.site }}
+      mode: ${{ inputs.mode }}
