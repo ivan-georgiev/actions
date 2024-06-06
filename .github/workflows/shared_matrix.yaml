@@ -1,0 +1,21 @@
+name: shared_simple
+on:
+  workflow_call:
+    inputs:
+      stackList:
+        description: 'Stack Names JSON list'
+        required: true
+        type: string
+
+jobs:
+  runMany:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        stack: ${{ fromJson(inputs.stackList) }}
+    steps:
+      - name: Print the input value
+        shell: pwsh
+        run: |
+          Write-Verbose -Message "Value: ${{ matrix.stack }} , $(Get-Date)" -Verbose

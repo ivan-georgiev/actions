@@ -1,0 +1,40 @@
+name: dynamic_matrix
+on: 
+  push:
+jobs:
+  setupMatrix:
+    runs-on: ubuntu-latest
+    outputs:
+      stackGroups: ${{ steps.create-matrix.outputs.stackGroups }}
+      stacks: ${{ steps.create-matrix.outputs.stacks }}
+    steps:
+      - name: Dynamically create ordered paralell groups
+        id: create-matrix
+        working-directory: .
+        shell: pwsh
+        run: |
+          Get-Item -Path $env:GITHUB_OUTPUT
+          
+          $stackGroups = @('groupA', 'groupB', 'groupC')
+          $stacks = @{
+            'groupA' = @('a', 'b', 'c')
+            'groupB' = @('d', 'e')
+            'groupC' = @('F')
+          }
+
+          $stackGroupsJson = $stackGroups | ConvertTo-Json -Compress
+          "stackGroups=$stackGroupsJson" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          
+          $stacksJson = $stacks | ConvertTo-Json -Compress
+          "stacks=$stacksJson" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+  call-workflow-in-local-repo:
+    uses: ./.github/workflows/shared_matrix.yaml
+    strategy:
+      fail-fast: true
+      max-parallel: 1
+      matrix:
+        stackGroup:  ${{ fromJson(needs.setupMatrix.outputs.stackGroups) }}
+    needs: setupMatrix
+    with:
+      stackList: ${{ toJson(fromJson(needs.setupMatrix.outputs.stacks)[matrix.stackGroup]) }}
