@@ -20,13 +20,13 @@ on:
         type: string
 jobs:
   deploy-single-stack:
-    uses: ./.github/workflows/shared_deploystack.yaml
     strategy:
       fail-fast: false
       matrix:
         stack: ${{ fromJson(inputs.stackList) }}
-    with:
-      stack: ${{ matrix.stack }}
-      environment: ${{ inputs.environment }}
-      site: ${{ inputs.site }}
-      mode: ${{ inputs.mode }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print the input value
+        shell: pwsh
+        run: |
+          Write-Verbose -Message "Value: ${{ matrix.stack }} ,  ${{ inputs.environment }} ,   ${{ inputs.site }} ,  ${{ inputs.mode }}" -Verbose

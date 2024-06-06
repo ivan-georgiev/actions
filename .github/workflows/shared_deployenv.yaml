@@ -29,7 +29,7 @@ jobs:
           # input: environment
           
           # result
-          $stacks = @{
+          $stacks = [ordered]@{
             'groupA' = @('a', 'b', 'c')
             'groupB' = @('d', 'e')
             'groupC' = @('F')

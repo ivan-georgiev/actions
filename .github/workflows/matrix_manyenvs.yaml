@@ -27,7 +27,7 @@ jobs:
           # input: envFilter
           
           # result
-          $environments = @{
+          $environments = [ordered]@{
             'dev' = @{
               'site'= 'primary'
             }
