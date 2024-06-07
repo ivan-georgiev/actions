@@ -12,6 +12,18 @@ on:
         required: true
         default: complete
         type: string
+  workflow_call:
+    inputs:
+      envFilter:
+        description: 'Environment Group Filter'
+        required: true
+        default: non-prod
+        type: string
+      mode:
+        description: 'minimal or complete'
+        required: true
+        default: complete
+        type: string        
 jobs:
   setupMatrix:
     runs-on: ubuntu-latest
@@ -25,6 +37,7 @@ jobs:
         shell: pwsh
         run: |
           # input: envFilter
+          Write-Verbose -Message '${{ inputs.envFilter }} - ${{ inputs.mode }}'
           
           # result
           $environments = [ordered]@{
